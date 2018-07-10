@@ -1,0 +1,2305 @@
+# print 'Loading Data...'
+
+import csv
+import pandas as pd
+import datetime
+import os
+import glob
+from pyexcel.cookbook import merge_all_to_a_book
+import pyexcel.ext.xlsx
+
+
+
+now = datetime.datetime.now()
+week= now.strftime("%W")
+week=int(week)
+day=now.strftime("%w")
+day=int(day)
+date=now.strftime("%d-%m-%Y")
+
+
+entryd=input('Enter the date:')
+entrym=input('Enter the month in words in number:\n1.JANUARY\n2.FEBRUARY\n3.MARCH\n4.APRIL\n5.MAY\n6.JUNE\n7.JULY\n8.AUGUST\n9.SEPTEMBER\n10.OCTOBER\n11.NOVEMBER\n12.DECEMBER\n')
+entrytype=input('Enter the tech:\n1.2G\n2.3G\n3.LTE\n4.VoLTE\n')
+entrymode=input('Enter the mode:\n1.Daily KPI Data\n2.Weekly Average Data\n3.Summary\n')
+
+if(entrytype==1):
+    tech='2G'
+    if(entrym==1):
+        month='JANUARY'
+    if(entrym==2):
+        month='FEBRUARY'
+    if(entrym==3):
+        month='MARCH'
+    if(entrym==4):
+        month='APRIL'
+    if(entrym==5):
+        month='MAY'
+    if(entrym==6):
+        month='JUNE'
+    if(entrym==7):
+        month='JULY'
+    if(entrym==8):
+        month='AUGUST'
+    if(entrym==9):
+        month='SEPTEMBER'
+    if(entrym==10):
+        month='OCTOBER'
+    if(entrym==11):
+        month='NOVEMBER'
+    if(entrym==12):
+        month='DECEMBER'
+if(entrytype==2):
+    tech='3G'
+    if(entrym==1):
+        month='January'
+    if(entrym==2):
+        month='February'
+    if(entrym==3):
+        month='March'
+    if(entrym==4):
+        month='April'
+    if(entrym==5):
+        month='May'
+    if(entrym==6):
+        month='June'
+    if(entrym==7):
+        month='July'
+    if(entrym==8):
+        month='August'
+    if(entrym==9):
+        month='September'
+    if(entrym==10):
+        month='October'
+    if(entrym==11):
+        month='November'
+    if(entrym==12):
+        month='December'
+if(entrytype==3):
+    tech='LTE'
+    if(entrym==1):
+        month='JANUARY'
+    if(entrym==2):
+        month='FEBRUARY'
+    if(entrym==3):
+        month='MARCH'
+    if(entrym==4):
+        month='APRIL'
+    if(entrym==5):
+        month='MAY'
+    if(entrym==6):
+        month='JUNE'
+    if(entrym==7):
+        month='JULY'
+    if(entrym==8):
+        month='AUGUST'
+    if(entrym==9):
+        month='SEPTEMBER'
+    if(entrym==10):
+        month='OCTOBER'
+    if(entrym==11):
+        month='NOVEMBER'
+    if(entrym==12):
+        month='DECEMBER'
+        
+if(entrytype==4):
+    tech='VoLTE'
+    if(entrym==1):
+        month='JANUARY'
+    if(entrym==2):
+        month='FEBRUARY'
+    if(entrym==3):
+        month='MARCH'
+    if(entrym==4):
+        month='APRIL'
+    if(entrym==5):
+        month='MAY'
+    if(entrym==6):
+        month='JUNE'
+    if(entrym==7):
+        month='JULY'
+    if(entrym==8):
+        month='AUGUST'
+    if(entrym==9):
+        month='SEPTEMBER'
+    if(entrym==10):
+        month='OCTOBER'
+    if(entrym==11):
+        month='NOVEMBER'
+    if(entrym==12):
+        month='DECEMBER'
+
+if (tech=='2G'):
+    
+    period=[]; bsc=[]; segname=[]; segid=[]; mpid=[]; cellid=[]; calls=[]; traffic=[]
+    tchdrop=[]; tchblock=[]; hosr=[]; mmr=[]; bcch=[]; kpi=[]; segn=[];rcr=[];master=[]
+    
+    with open('/home/pun-node/Desktop/2gbbh.csv') as rawData:
+        csvReader = csv.reader(rawData)
+        for column in csvReader:
+            period.append(column[1])
+            bsc.append(column[2])
+            segname.append(column[3])
+            segid.append(column[4])
+            mpid.append(column[5])
+            cellid.append(column[6])
+            calls.append(column[8])
+            traffic.append(column[9])
+            tchdrop.append(column[14])
+            tchblock.append(column[20])
+            hosr.append(column[26])
+            mmr.append(column[59])
+        
+    with open('/home/pun-node/Desktop/2ggos.csv') as bcchData:
+        csvReader = csv.reader(bcchData)
+        for column in csvReader:
+            bcch.append(column[30])
+        
+        
+    with open('/home/pun-node/Desktop/2gmaster.csv') as masterData:  
+        rcrreader = csv.reader(masterData)
+        for row in rcrreader:
+            master.append(row)
+            
+if (tech=='3G'):
+    g3masterdata=[]; g3period=[]; wcelid=[];cella=[];csdrop=[];csrabn=[];csrrcn=[];csirat=[];csrabd=[];csrrcd=[]
+    
+    with open('/home/pun-node/Desktop/3gbbh.csv') as rawData:
+        csvReader = csv.reader(rawData)
+        for column in csvReader:
+            g3period.append(column[0])
+            wcelid.append(column[6])
+            cella.append(column[7])
+            csdrop.append(column[20])
+            csrabn.append(column[84])
+            csrabd.append(column[85])
+            csrrcn.append(column[67])
+            csrrcd.append(column[68])
+            csirat.append(column[36])
+        
+   # with open('/home/pun-node/Desktop/3ggos.csv') as cellavail:
+    #    csvReader = csv.reader(cellavail)
+     #   for column in csvReader:
+      #      cellavail.append(column[7])
+    
+    #with open('/home/pun-node/Desktop/3grcr.csv') as rcrfi:  
+     #   rcrreader = csv.reader(rcrfi)
+      #  for row in rcrreader:
+       #     rcr.append(row)
+        
+    with open('/home/pun-node/Desktop/3gmasterdata.csv') as masterData:  
+        rcrreader = csv.reader(masterData)
+        for row in rcrreader:
+            g3masterdata.append(row)
+            
+if (tech=='LTE'):
+    g4masterdata=[]; g4period=[];g4cella=[];g4rrc=[];g4rab=[];g4payload=[];g4tdfd=[];g4site=[];g4cellname=[];g4thput=[]
+    g4prb=[]
+    
+    with open('/home/pun-node/Desktop/4gbbh.csv') as rawData:
+        csvReader = csv.reader(rawData)
+        for column in csvReader:
+            g4period.append(column[0])
+            g4cella.append(column[9])
+            g4payload.append(column[34])
+            g4rab.append(column[16])
+            g4rrc.append(column[12])
+            g4tdfd.append(column[8])
+            g4site.append(column[3])
+            g4cellname.append(column[4])
+            g4thput.append(column[37])
+            g4prb.append(column[44])
+            
+    with open('/home/pun-node/Desktop/4gmasterdata.csv') as masterData:  
+        rcrreader = csv.reader(masterData)
+        for row in rcrreader:
+            g4masterdata.append(row)
+            
+if (tech=='VoLTE'):
+    g4masterdata=[]; gvperiod=[];gvcalls=[];gvlossul=[];gvdrop=[];gverab=[];gvcellname=[];gvsrvcc=[];gvlossdl=[];gvsite=[]
+    g4cellname=[];g4tdfd=[];g4site=[]
+    
+    with open('/home/pun-node/Desktop/voltebbh.csv') as rawData:
+        csvReader = csv.reader(rawData)
+        for column in csvReader:
+            gvperiod.append(column[0])
+            gvcalls.append(column[14])
+            gvdrop.append(column[17])
+            gvlossdl.append(column[20])
+            gvlossul.append(column[21])
+            gvsite.append(column[3])
+            gvcellname.append(column[4])
+            gverab.append(column[6])
+            gvsrvcc.append(column[15])
+            
+    with open('/home/pun-node/Desktop/4gbbh.csv') as rawData:
+        csvReader = csv.reader(rawData)
+        for column in csvReader:
+            g4tdfd.append(column[8])
+            g4site.append(column[3])
+            g4cellname.append(column[4])
+            
+    with open('/home/pun-node/Desktop/4gmasterdata.csv') as masterData:  
+        rcrreader = csv.reader(masterData)
+        for row in rcrreader:
+            g4masterdata.append(row)
+     
+    
+print '...Data Loading Done 100%'
+#-----------------------------------------------------------------------------------------------------------------------
+
+typedef= input('     Press 1 followed by enter for new database\n     Press 2 followed by enter for current database\n')
+
+
+    
+if typedef==1 and tech=='2G' and entrymode==1:
+    corAcc=[];temp=[]
+    
+    for x in range(0,17):
+        temp.append('')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('Cell ID')
+    temp.append('Segment Name')
+    temp.append('Site ID')
+    temp.append('Corporate Account Name')
+    temp.append('Site Name')
+    temp.append('Cluster')
+    temp.append('City')
+    temp.append('RF Zone')
+    temp.append('RF SPOC')
+    temp.append('Timeline')
+    temp.append('Category')
+    temp.append('Status')
+    corAcc.append(temp)
+    temp=[]
+    
+    corAcc[0][12]='Cell Availability'
+    corAcc[0][13]='Traffic'
+    corAcc[0][14]='Number Of Calls'
+    corAcc[0][15]='TCH Drop'
+    corAcc[0][16]='TCH Block'
+    
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+
+
+    
+    for y,x in enumerate(master):
+        for p,q in enumerate(mpid):
+            if master[y][0]==q:
+                temp.append(int(float((cellid[p]))))
+                temp.append(segname[p])
+                temp.append(master[y][0])
+                temp.append(master[y][1])
+                temp.append(master[y][2])
+                temp.append(master[y][3])
+                temp.append(master[y][4])
+                temp.append(master[y][5])
+                temp.append(master[y][6])
+                temp.append('')
+                temp.append('')
+                temp.append('')
+                temp.append(100-(100*float(bcch[p])/3600))
+                temp.append(traffic[p])
+                temp.append(calls[p])
+                temp.append(tchdrop[p])
+                temp.append(tchblock[p])
+                corAcc.append(temp)
+                temp=[]
+                
+    
+                
+    
+                            
+    myFile = open('/home/pun-node/Desktop/Corporate_Account.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/Corporate_Account*.csv"), "/home/pun-node/Desktop/Corporate_Account.xlsx")
+    
+#------------------------------------------------------------------------------------------------------------------------
+
+if typedef==2 and tech=='2G' and entrymode==1:
+    corAcc=[];ca=0;tc=0;ns=0;tp=0;tk=0;z=0
+    with open('/home/pun-node/Desktop/Corporate_Account.csv') as corData:  
+        rcrreader = csv.reader(corData)
+        for row in rcrreader:
+            corAcc.append(row)
+            
+    
+   
+    s=0
+    for x in corAcc:
+        s=s+1
+    for x in corAcc[0]:
+        if x=='Cell Availability':
+            break
+        ca=ca+1
+    
+    corAcc[1].insert(ca,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    for x in cellid:
+        for y in range(2,s):
+            if x!='Cell ID' and x!='':
+                if float(corAcc[y][0])==float(x):
+                    corAcc[y].insert(ca,(100-(100*float(bcch[z])/3600)))
+        z=z+1
+        
+    
+    
+
+#-----------------------------------------------------traffic------------------------------------------------------------#
+    corAcc[0].insert(ca+1,'')
+    for x in corAcc[0]:
+        if x=='Traffic':
+            break
+        tc=tc+1
+    corAcc[1].insert(tc,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+ 
+    for x in cellid:
+        for y in range(2,s):
+            if x!='Cell ID' and x!='':
+                if float(corAcc[y][0])==float(x):
+                    corAcc[y].insert(tc,float(traffic[z]))
+        z=z+1
+    
+
+#--------------------------------------------------No. of calls----------------------------------------------------------#
+    
+    corAcc[0].insert(tc+1,'')
+    for x in corAcc[0]:
+        if x=='Number Of Calls':
+            break
+        ns=ns+1
+        
+    corAcc[1].insert(ns,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+    for x in cellid:
+        for y in range(2,s):
+            if x!='Cell ID' and x!='':
+                if float(corAcc[y][0])==float(x):
+                    corAcc[y].insert(ns,float(calls[z]))
+        z=z+1
+    
+
+#----------------------------------------------------TCH Drop----------------------------------------------------------#
+    corAcc[0].insert(ns+1,'')
+    for x in corAcc[0]:
+        if x=='TCH Drop':
+            break
+        tp=tp+1
+        
+    corAcc[1].insert(tp,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+
+    for x in cellid:
+        for y in range(2,s):
+            if x!='Cell ID' and x!='':
+                if float(corAcc[y][0])==float(x) and tchdrop[z]!='#N/A' and tchdrop[z]!='':
+                    corAcc[y].insert(tp,float(tchdrop[z]))
+        z=z+1
+    
+    
+
+#----------------------------------------------------TCH Block----------------------------------------------------------#
+    corAcc[0].insert(tp+1,'')
+    for x in corAcc[0]:
+        if x=='TCH Block':
+            break
+        tk=tk+1
+    
+    corAcc[1].insert(tk,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+ 
+    for x in cellid:
+        for y in range(2,s):
+            if x!='Cell ID' and x!='':
+                if float(corAcc[y][0])==float(x) and tchblock[z]!='':
+                    corAcc[y].insert(tk,float(tchblock[z]))
+        z=z+1
+    
+#--------------------------------------------------------------------------------------------------------------------#     
+
+                
+    myFile = open('/home/pun-node/Desktop/Corporate_Account.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/Corporate_Account*.csv"), "/home/pun-node/Desktop/Corporate_Accountold.xlsx")
+    
+#---------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+if tech=='3G' and typedef==1 and entrymode==1:
+    
+    corAcc=[];temp=[]
+    
+    for x in range(0,16):
+        temp.append('')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('Cell ID')
+    temp.append('Site ID')
+    temp.append('Corporate Account Name')
+    temp.append('Site Name')
+    temp.append('Cluster')
+    temp.append('City')
+    temp.append('RF Zone')
+    temp.append('RF SPOC')
+    temp.append('Timeline')
+    temp.append('Remark')
+    temp.append('Issue')
+    corAcc.append(temp)
+    temp=[]
+    
+    corAcc[0][11]='Cell Availability'
+    corAcc[0][12]='CS Drop'
+    corAcc[0][13]='CS RAB'
+    corAcc[0][14]='CS RRC'
+    corAcc[0][15]='CS IRAT'
+    
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    
+    for y,x in enumerate(g3masterdata):
+        for p,q in enumerate(wcelid):
+            if g3masterdata[y][2]==q:
+                temp.append(int(float((wcelid[p]))))
+                temp.append(g3masterdata[y][1])
+                temp.append(g3masterdata[y][4])
+                temp.append(g3masterdata[y][5])
+                temp.append(g3masterdata[y][6])
+                temp.append(g3masterdata[y][7])
+                temp.append(g3masterdata[y][8])
+                temp.append(g3masterdata[y][9])
+                temp.append('')
+                temp.append('')
+                temp.append('')
+                temp.append(cella[p])
+                temp.append(csdrop[p])
+                if csrabn[p]!='' and csrabd[p]!='' and csrabd[p]!='0':
+                    temp.append(float(int(csrabn[p])/int(csrabd[p]))*100)
+                if csrabn[p]=='' and csrabd[p]=='':
+                    temp.append('')
+                if csrabd[p]=='0':
+                    temp.append('0')
+                
+                if csrrcn[p]!='' and csrrcd[p]!='' and csrrcd[p]!='0':
+                    temp.append(float(int(csrrcn[p])/int(csrrcd[p]))*100)
+                if csrrcn[p]=='' and csrrcd[p]=='':
+                    temp.append('')
+                if csrrcd[p]=='0':
+                    temp.append('0')
+                
+                temp.append(csirat[p])
+                corAcc.append(temp)
+                temp=[]
+                
+                
+    myFile = open('/home/pun-node/Desktop/3gCorporate_Account.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/3gCorporate_Account*.csv"), "/home/pun-node/Desktop/3gCorporate_Account.xlsx")
+    
+    
+#-----------------------------------------------------------------------------------------------------------------------------
+
+
+if tech=='3G' and typedef==2 and entrymode==1:
+    
+    corAcc=[];ca=0;cdp=0;crb=0;crc=0;cit=0;z=0
+    with open('/home/pun-node/Desktop/3gCorporate_Account.csv') as corData:  
+        rcrreader = csv.reader(corData)
+        for row in rcrreader:
+            corAcc.append(row)
+    print 'coracc done' 
+    
+   
+    s=0
+    for x in corAcc:
+        s=s+1
+    for x in corAcc[0]:
+        if x=='Cell Availability':
+            break
+        ca=ca+1
+    
+    corAcc[1].insert(ca,str(entryd)+'-'+str(entrym)+'-'+'2018')
+    
+    for x in wcelid:
+        for y in range(2,s):
+            if x!='WCEL ID' and x!='':
+                if float(corAcc[y][0])==float(x):
+                    corAcc[y].insert(ca,cella[z])
+        z=z+1
+        
+    
+    print 'cel avail done' 
+
+#---------------------------------------------------CS Drop------------------------------------------------------------#
+    corAcc[0].insert(ca+1,'')
+    for x in corAcc[0]:
+        if x=='CS Drop':
+            break
+        cdp=cdp+1
+    corAcc[1].insert(cdp,date)
+    
+    z=0
+ 
+    for x in wcelid:
+        for y in range(2,s):
+            if x!='WCEL ID' and x!='':
+                if float(corAcc[y][0])==float(x) and csdrop[z]!='':
+                    corAcc[y].insert(cdp,float(csdrop[z]))
+        z=z+1
+    
+    print 'csdrop done' 
+#--------------------------------------------------CS RAB---------------------------------------------------------#
+    
+    corAcc[0].insert(cdp+1,'')
+    for x in corAcc[0]:
+        if x=='CS RAB':
+            break
+        crb=crb+1
+        
+    corAcc[1].insert(crb,date)
+    
+    z=0
+
+    for x in wcelid:
+        for y in range(2,s):
+            if x!='WCEL ID' and x!='':
+                if float(corAcc[y][0])==float(x):
+                    if csrabn[p]!='' and csrabd[p]!='' and csrabd[p]!='0':
+                        corAcc[y].insert(crb,float(int(csrabn[p])/int(csrabd[p]))*100)
+                    if csrabn[p]=='' and csrabd[p]=='':
+                        corAcc[y].insert(crb,'')
+                    if csrabd[p]=='0':
+                        corAcc[y].insert(crb,'0')
+        z=z+1
+    
+    print 'csrab done' 
+#----------------------------------------------------CS RRC----------------------------------------------------------#
+    corAcc[0].insert(crb+1,'')
+    
+    for x in corAcc[0]:
+        if x=='CS RRC':
+            break
+        crc=crc+1
+        
+    corAcc[1].insert(crc,date)
+    
+    z=0
+
+
+    for x in wcelid:
+        for y in range(2,s):
+            if x!='WCEL ID' and x!='':
+                if float(corAcc[y][0])==float(x):
+                    if csrrcn[p]!='' and csrrcd[p]!='' and csrrcd[p]!='0':
+                        corAcc[y].insert(crc,float(int(csrrcn[p])/int(csrrcd[p]))*100)
+                    if csrrcn[p]=='' and csrrcd[p]=='':
+                        corAcc[y].insert(crc,'')
+                    if csrrcd=='0':
+                        corAcc[y].insert(crc,'0')
+        z=z+1
+    
+    print 'csrrc done' 
+
+#----------------------------------------------------CS IRAT----------------------------------------------------------#
+    corAcc[0].insert(crc+1,'')
+    for x in corAcc[0]:
+        if x=='TCH Block':
+            break
+        cit=cit+1
+    
+    corAcc[1].insert(cit,date)
+    
+    z=0
+
+ 
+    for x in wcelid:
+        for y in range(2,s):
+            if x!='WCEL ID' and x!='':
+                if float(corAcc[y][0])==float(x) and csirat[z]!='':
+                    corAcc[y].insert(cit,float(csirat[z]))
+        z=z+1
+    print 'csirat done' 
+#--------------------------------------------------------------------------------------------------------------------#     
+
+                
+    myFile = open('/home/pun-node/Desktop/3gCorporate_Account.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/3gCorporate_Account*.csv"), "/home/pun-node/Desktop/3gCorporate_Accountold.xlsx")
+    
+#---------------------------------------------------------------------------------------------------------------
+
+if tech=='2G' and typedef==1 and entrymode==2:
+    
+    z=0;s=0; corAcc=[];rcr=[];g2master=[]
+    
+    
+    
+    with open('/home/pun-node/Desktop/2grcr.csv') as rcrfi:  
+        rcrreader = csv.reader(rcrfi)
+        for row in rcrreader:
+            rcr.append(row)
+
+            
+    with open('/home/pun-node/Desktop/2gmasterdata.csv') as masterData:  
+        rcrreader = csv.reader(masterData)
+        for row in rcrreader:
+            g2master.append(row)
+            
+    for x in range(0,24):
+        temp.append('')
+        
+    corAcc.append(temp)
+    temp=[]
+    temp.append('Cell ID')
+    temp.append('Segment Name')
+    temp.append('Site ID')
+    temp.append('Corporate Account Name')
+    temp.append('Site Name')
+    temp.append('Cluster')
+    temp.append('City')
+    temp.append('RF Zone')
+    temp.append('RF SPOC')
+    temp.append('Timeline')
+    temp.append('Category')
+    temp.append('Status')
+    temp.append('Remarks')
+    temp.append('Issue')
+    corAcc.append(temp)
+    temp=[]
+    
+    corAcc[1].append('TA')
+    corAcc[1].append('FI')
+    corAcc[1].append('RCR')
+    corAcc[1].append('Number Of Calls')
+    corAcc[1].append('Cell Availability')
+    corAcc[1].append('Traffic')
+    corAcc[1].append('TCH Drop')
+    corAcc[1].append('TCH Block')
+    corAcc[1].append('MMR')
+    corAcc[1].append('HOSR')
+    
+    mydate = datetime.date(2018,entrym, entryd)
+    wk= mydate.strftime("%W")
+    dowk=mydate.strftime("%w")
+    
+    corAcc[0][14]=('Week ' + str(wk) + ' Average')
+    
+    z=2
+    temp=[]
+    for y,x in enumerate(g2master):
+        for a,b in enumerate(cellid):
+                if b!='Cell ID' and b!='' and g2master[y][2]!='Cell ID' and g2master[y][2]!='': 
+                    if float(g2master[y][2])==float(b) and dowk!=6 and dowk!=0:
+                        temp.append(b)
+                        temp.append(g2master[y][3])
+                        temp.append(g2master[y][1])
+                        temp.append(g2master[y][4])
+                        temp.append(g2master[y][5])
+                        temp.append(g2master[y][6])
+                        for p,s in enumerate(master):
+                            if g2master[y][1]==master[p][0] and g2master[y][1]!='Site ID' and g2master[y][1]!='' and master[p][0]!='':
+                                temp.append(master[p][4])
+                                temp.append(master[p][5])
+                                temp.append(master[p][6])
+                        temp.append('')
+                        temp.append('')
+                        temp.append('')
+                        temp.append('')
+                        temp.append('')
+                        temp.append(0)
+                        for p,s in enumerate(rcr):
+                            if rcr[p][1]==g2master[y][3] and rcr[p][1]!='' and g2master[y][3]!='SegName' and g2master[y][3]!='':
+                                temp.append(rcr[p][5])
+                                temp.append(rcr[p][4])
+                        temp.append(calls[a])
+                        temp.append(100-(100*float(bcch[a])/3600))
+                        temp.append(traffic[a])
+                        temp.append(tchdrop[a])
+                        temp.append(tchblock[a])
+                        temp.append(mmr[a])
+                        temp.append(hosr[a])
+                        
+                        corAcc.append(temp)
+                        temp=[]
+                
+    
+                    
+    myFile = open('/home/pun-node/Desktop/2g_week_average1.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/2g_week_average1*.csv"), "/home/pun-node/Desktop/2g_week_average.xlsx")
+    
+if tech=='2G' and typedef==2 and entrymode==2:
+    
+    z=0;s=0; corAcc=[]
+    rcr=[];g2master=[]
+    
+   
+        
+    
+    with open('/home/pun-node/Desktop/2grcr.csv') as rcrfi:  
+        rcrreader = csv.reader(rcrfi)
+        for row in rcrreader:
+            rcr.append(row)
+   
+            
+    with open('/home/pun-node/Desktop/2gmasterdata.csv') as masterData:  
+        rcrreader = csv.reader(masterData)
+        for row in rcrreader:
+            g2master.append(row)
+            
+    corAcc=[];ca=0;tc=0;ns=0;tp=0;tk=0;z=0
+    with open('/home/pun-node/Desktop/2g_week_average.csv') as corData:  
+        rcrreader = csv.reader(corData)
+        for row in rcrreader:
+            corAcc.append(row)
+            
+    mydate = datetime.date(2018,entrym, entryd)
+    wk= (mydate.strftime("%W"))
+    dowk=int(mydate.strftime("%w"))
+    checkwk=('Week ' + str(wk) + ' Average')
+    n=0;m=0
+    for x in corAcc[0]:
+        if checkwk in x:
+            n=1
+            break
+        m=m+1
+    
+    
+    if dowk!=1 and n==1:
+    
+        s=0
+        for x in corAcc:
+            s=s+1
+        z=2
+        temp=[]
+        for y,x in enumerate(corAcc):
+            for a,b in enumerate(cellid):
+                if b!='Cell ID' and b!='' and corAcc[y][0]!='Cell ID' and corAcc[y][0]!='': 
+                    if float(corAcc[y][0])==float(b) and dowk!=6 and dowk!=0:
+                        corAcc[y][m]=(((float(corAcc[y][m]))*(float(dowk-1)))+0)/dowk
+                        for p,s in enumerate(rcr):
+                            if rcr[p][1]==corAcc[y][1] and rcr[p][1]!='' and corAcc[y][1]!='Segment Name' and corAcc[y][1]!='':
+                                if rcr[p][5]!='' and corAcc[y][m+1]!='':
+                                    corAcc[y][m+1]=(((float(corAcc[y][m+1]))*float(dowk-1))+float(rcr[p][5]))/dowk
+                                if rcr[p][4]!='' and corAcc[y][m+2]!='':
+                                    corAcc[y][m+2]= (((float(corAcc[y][m+2]))*(float(dowk-1)))+float(rcr[p][4]))/dowk
+                        if calls[a]!=''  and corAcc[y][m+3]!='':
+                            corAcc[y][m+3]= (((float(corAcc[y][m+3]))*(float(dowk-1)))+float(calls[a]))/dowk
+                        corAcc[y][m+4]= (((float(corAcc[y][m+4]))*(float(dowk-1)))+(100-(100*float(bcch[a])/3600)))/dowk
+                        if traffic[a]!='' and corAcc[y][m+5]!='':
+                            corAcc[y][m+5]= (((float(corAcc[y][m+5]))*(float(dowk-1)))+float(traffic[a]))/dowk
+                        if tchdrop[a]!='' and corAcc[y][m+6]!='':
+                            corAcc[y][m+6]= (((float(corAcc[y][m+6]))*(dowk-1)+float(tchdrop[a])))/dowk
+                        if tchblock[a]!=''  and corAcc[y][m+7]!='':
+                            corAcc[y][m+7]= (((float(corAcc[y][m+7]))*(float(dowk-1)))+float(tchblock[a]))/dowk
+                        if mmr[a]!=''  and corAcc[y][m+8]!='':
+                            corAcc[y][m+8]= (((float(corAcc[y][m+8]))*(float(dowk-1)))+float(mmr[a]))/dowk
+                        if hosr[a]!=''  and corAcc[y][m+9]!='':
+                            corAcc[y][m+9]= (((float(corAcc[y][m+9]))*(float(dowk-1)))+float(hosr[a]))/dowk
+            z=z+1
+        
+        
+        myFile = open('/home/pun-node/Desktop/2g_week_average.csv', 'w')
+        with myFile:
+            writer = csv.writer(myFile)
+            writer.writerows(corAcc)
+    
+        merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/2g_week_average*.csv"), "/home/pun-node/Desktop/2g_week_average.xlsx")
+
+    if dowk==1 or n==0 :
+        s=0
+        for x in corAcc:
+            s=s+1
+        for x in range(1,11):
+            corAcc[0].insert(14,'')
+        for y,x in enumerate(corAcc):
+            for a,b in enumerate(cellid):
+                if b!='Cell ID' and b!='' and corAcc[y][0]!='Cell ID' and corAcc[y][0]!='': 
+                    if float(corAcc[y][0])==float(b) and dowk!=6 and dowk!=0: 
+                        if hosr[a]!='':
+                            corAcc[y].insert(14,float(hosr[a]))
+                        if mmr[a]!='':
+                            corAcc[y].insert(14,float(mmr[a]))
+                        if tchblock[a]!='':
+                            corAcc[y].insert(14,float(tchblock[a]))
+                        if tchdrop[a]!='':
+                            corAcc[y].insert(14,float(tchdrop[a]))
+                        if traffic[a]!='':
+                            corAcc[y].insert(14,float(traffic[a]))
+                        corAcc[y].insert(14,(100-(100*float(bcch[a])/3600)))
+                        if calls[a]!='':
+                            corAcc[y].insert(14,int(calls[a]))
+                        for p,s in enumerate(rcr):
+                            if rcr[p][1]==corAcc[y][1] and rcr[p][1]!='' and corAcc[y][1]!='Segment Name' and corAcc[y][1]!='':
+                                if rcr[p][4]!='':
+                                    corAcc[y].insert(14,float(rcr[p][4]))
+                                if rcr[p][5]!='':
+                                    corAcc[y].insert(14,float(rcr[p][5]))
+                        corAcc[y].insert(14,0)
+        corAcc[1].insert(14,'HOSR')
+        corAcc[1].insert(14,'MMR')
+        corAcc[1].insert(14,'TCH Block')
+        corAcc[1].insert(14,'TCH Drop')
+        corAcc[1].insert(14,'Traffic')
+        corAcc[1].insert(14,'Cell Availability')
+        corAcc[1].insert(14,'Number Of Calls')
+        corAcc[1].insert(14,'RCR')
+        corAcc[1].insert(14,'FI')
+        corAcc[1].insert(14,'TA')
+        corAcc[0][14]=('Week ' + str(wk) + ' Average')
+        
+    
+        myFile = open('/home/pun-node/Desktop/2g_week_average.csv', 'w')
+        with myFile:
+            writer = csv.writer(myFile)
+            writer.writerows(corAcc)
+    
+        merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/2g_week_average*.csv"), "/home/pun-node/Desktop/2g_week_average.xlsx")
+        
+if tech=='3G' and typedef==1 and entrymode==2:
+    corAcc=[];temp=[]
+    
+    for x in range(0,18):
+        temp.append('')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('Cell ID')
+    temp.append('Site ID')
+    temp.append('Corporate Account Name')
+    temp.append('Site Name')
+    temp.append('Cluster')
+    temp.append('City')
+    temp.append('RF Zone')
+    temp.append('RF SPOC')
+    temp.append('Timeline')
+    temp.append('Remark')
+    temp.append('Issue')
+    corAcc.append(temp)
+    temp=[]
+    
+    corAcc[1].append('Cell Availability')
+    corAcc[1].append('CS Drop')
+    corAcc[1].append('CS RAB')
+    corAcc[1].append('CS RRC')
+    corAcc[1].append('CS IRAT')
+    corAcc[1].append('CS RCR')
+    corAcc[1].append('FI')
+    
+    mydate = datetime.date(2018,entrym, entryd)
+    wk= mydate.strftime("%W")
+    dowk=mydate.strftime("%w")
+    
+    corAcc[0][11]=('Week ' + str(wk) + ' Average')
+    
+    for y,x in enumerate(g3masterdata):
+        for p,q in enumerate(wcelid):
+            if g3masterdata[y][2]==q:
+                temp.append(int(float((wcelid[p]))))
+                temp.append(g3masterdata[y][1])
+                temp.append(g3masterdata[y][4])
+                temp.append(g3masterdata[y][5])
+                temp.append(g3masterdata[y][6])
+                temp.append(g3masterdata[y][7])
+                temp.append(g3masterdata[y][8])
+                temp.append(g3masterdata[y][9])
+                temp.append('')
+                temp.append('')
+                temp.append('')
+                temp.append(cella[p])
+                temp.append(csdrop[p])
+                if csrabn[p]!='' and csrabd[p]!='' and csrabd[p]!='0':
+                    temp.append(float(int(csrabn[p])/int(csrabd[p]))*100)
+                if csrabn[p]=='' and csrabd[p]=='':
+                    temp.append('')
+                if csrabd[p]=='0':
+                    temp.append('0')
+                
+                if csrrcn[p]!='' and csrrcd[p]!='' and csrrcd[p]!='0':
+                    temp.append(float(int(csrrcn[p])/int(csrrcd[p]))*100)
+                if csrrcn[p]=='' and csrrcd[p]=='':
+                    temp.append('')
+                if csrrcd=='0':
+                    temp.append('0')
+                
+                temp.append(csirat[p])
+                temp.append(0)
+                temp.append(0)
+                corAcc.append(temp)
+                temp=[]
+                       
+                
+    
+                    
+    myFile = open('/home/pun-node/Desktop/3g_week_average.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/3g_week_average*.csv"), "/home/pun-node/Desktop/3g_week_average.xlsx")
+    
+
+    
+if tech=='3G' and typedef==2 and entrymode==2:
+    
+    
+            
+    corAcc=[];z=0
+    with open('/home/pun-node/Desktop/3g_week_average.csv') as corData:  
+        rcrreader = csv.reader(corData)
+        for row in rcrreader:
+            corAcc.append(row)
+            
+    mydate = datetime.date(2018,entrym, entryd)
+    wk= (mydate.strftime("%W"))
+    dowk=int(mydate.strftime("%w"))
+    
+    checkwk=('Week ' + str(wk) + ' Average')
+    m=0;n=0
+    for x in corAcc[0]:
+        if checkwk in x:
+            n=1
+            break
+        m=m+1
+    
+    
+    if dowk!=1 and n==1:
+
+    
+        s=0
+        for x in corAcc:
+            s=s+1
+        z=2
+        temp=[]
+        for y,x in enumerate(corAcc):
+            for a,b in enumerate(wcelid):
+                if b!='WCEL ID' and b!='' and corAcc[y][0]!='Cell ID' and corAcc[y][0]!='': 
+                    if float(corAcc[y][0])==float(b) and dowk!=6 and dowk!=0:
+                        corAcc[y][m]= (((float(corAcc[y][m]))*(float(dowk-1)))+(float(cella[a])))/dowk
+                        #for p,s in enumerate(rcr):
+                            #if rcr[p][1]==corAcc[y][1] and rcr[p][1]!='' and corAcc[y][1]!='Segment Name' and corAcc[y][1]!='':
+                               # if rcr[p][5]!='' and corAcc[y][m+3]!='':
+                        corAcc[y][m+5]=(((float(corAcc[y][m+5]))*float(dowk-1))+0)/dowk #csrcr
+                               # if rcr[p][4]!='' and corAcc[y][m+4]!='':
+                        corAcc[y][m+6]= (((float(corAcc[y][m+6]))*(float(dowk-1)))+0)/dowk#csfi
+                        if csdrop[a]!=''  and corAcc[y][m+1]!='':
+                            corAcc[y][m+1]= (((float(corAcc[y][m+1]))*(float(dowk-1)))+float(csdrop[a]))/dowk
+                        if csirat[a]!=''  and corAcc[y][m+4]!='':
+                            corAcc[y][m+4]= (((float(corAcc[y][m+4]))*(float(dowk-1)))+float(csirat[a]))/dowk
+                            
+                        if csrabn[a]!='' and csrabd[a]!='' and csrabd[a]!='0' and corAcc[y][m+2]!='':
+                            corAcc[y][m+2]= (((float(corAcc[y][m+2]))*(float(dowk-1)))+(float(int(csrabn[a])/int(csrabd[a]))*100))/dowk
+                        if csrabn[a]=='' and csrabd[a]=='':
+                            corAcc[y][m+2]=''
+                        if csrabd[a]=='0':
+                            corAcc[y][m+2]=0
+                
+                        if csrrcn[a]!='' and csrrcd[a]!='' and csrrcd[a]!='0' and corAcc[y][m+3]!='':
+                            corAcc[y][m+3]= (((float(corAcc[y][m+3]))*(float(dowk-1)))+(float(int(csrrcn[a])/int(csrrcd[a]))*100))/dowk
+                        if csrrcn[a]=='' and csrrcd[a]=='':
+                            corAcc[y][m+3]=''
+                        if csrrcd[a]=='0':
+                            corAcc[y][m+3]=0
+            z=z+1
+        
+        
+        myFile = open('/home/pun-node/Desktop/3g_week_average.csv', 'w')
+        with myFile:
+            writer = csv.writer(myFile)
+            writer.writerows(corAcc)
+    
+        merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/3g_week_average*.csv"), "/home/pun-node/Desktop/3g_week_average.xlsx")
+
+    if dowk==1 or n==0:
+        for x in range(1,8):
+            corAcc[0].insert(11,'')
+        for y,x in enumerate(corAcc):
+            for a,b in enumerate(wcelid):
+                if b!='WCEL ID' and b!='' and corAcc[y][0]!='Cell ID' and corAcc[y][0]!='': 
+                    if float(corAcc[y][0])==float(b) and dowk!=6 and dowk!=0:
+                        corAcc[y].insert(11,0)
+                        corAcc[y].insert(11,0)
+                        if csirat[a]!='':
+                            corAcc[y].insert(11,float(csirat[a]))
+                            
+                        if csrrcn[a]!='' and csrrcd[a]!='' and csrrcd[a]!='0':
+                            corAcc[y].insert(11,(float(int(csrrcn[a])/int(csrrcd[a]))*100))
+                        if csrrcn[a]=='' and csrrcd[a]=='':
+                            corAcc[y].insert(11,'')
+                        if csrrcd[a]=='0':
+                            corAcc[y].insert(11,'')
+                
+                        if csrabn[a]!='' and csrabd[a]!='' and csrabd[a]!='0':
+                            corAcc[y].insert(11,(float(int(csrabn[a])/int(csrabd[a]))*100))
+                        if csrabn[a]=='' and csrabd[a]=='':
+                            corAcc[y].insert(11,'')
+                        if csrabd[a]=='0':
+                            corAcc[y].insert(11,'')
+                        
+                        if csdrop[a]!='':
+                            corAcc[y].insert(11,float(csdrop[a]))
+                        if cella[a]!='':
+                            corAcc[y].insert(11,float(cella[a]))
+                        
+                       # for p,s in enumerate(rcr):
+                           # if rcr[p][1]==corAcc[y][1] and rcr[p][1]!='' and corAcc[y][1]!='Segment Name' and corAcc[y][1]!='':
+                               # if rcr[p][4]!='':
+                                 #   corAcc[y].insert(14,float(rcr[p][4]))
+                               # if rcr[p][5]!='':
+                                 #   corAcc[y].insert(14,float(rcr[p][5]))
+                        #corAcc[y].insert(14,0)
+        corAcc[1].insert(11,'CS FI')
+        corAcc[1].insert(11,'CS RCR')
+        corAcc[1].insert(11,'CS IRAT')
+        corAcc[1].insert(11,'CS RRC')
+        corAcc[1].insert(11,'CS RAB')
+        corAcc[1].insert(11,'CS Drop')
+        corAcc[1].insert(11,'Cell Availability')
+        corAcc[0][11]=('Week ' + str(wk) + ' Average')
+        
+    
+        myFile = open('/home/pun-node/Desktop/3g_week_average.csv', 'w')
+        with myFile:
+            writer = csv.writer(myFile)
+            writer.writerows(corAcc)
+    
+        merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/3g_week_average*.csv"), "/home/pun-node/Desktop/3g_week_average.xlsx")    
+    
+    
+    
+
+if typedef==1 and tech=='LTE' and entrymode==1:
+    corAcc=[];temp=[]
+    
+    for x in range(0,17):
+        temp.append('')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('Cell ID')
+    temp.append('Site ID')
+    temp.append('Site on TDD/FDD')
+    temp.append('Cell Name')
+    temp.append('Site Name')
+    temp.append('Town Name')
+    temp.append('RF Zone')
+    temp.append('Corporate Account Name')
+    temp.append('RF SPOC')
+    temp.append('Remark')
+    temp.append('Issue')
+    corAcc.append(temp)
+    temp=[]
+    
+    corAcc[0][11]='Throughput'
+    corAcc[0][12]='Total Payload'
+    corAcc[0][13]='Cell Availability'
+    corAcc[0][14]='PRB'
+    corAcc[0][15]='RRC'
+    
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+                
+    for y,x in enumerate(g4masterdata):
+        for p,q in enumerate(g4cellname):
+            if g4masterdata[y][3]==q:
+                temp.append(g4masterdata[y][2])
+                temp.append(g4masterdata[y][1])
+                temp.append(g4tdfd[p])
+                temp.append(q)
+                temp.append(g4site[p])
+                temp.append(g4masterdata[y][8])
+                temp.append(g4masterdata[y][9])
+                temp.append(g4masterdata[y][5])
+                temp.append(g4masterdata[y][10])
+                temp.append('')
+                temp.append('')
+                temp.append(g4thput[p])
+                temp.append(g4payload[p])
+                temp.append(g4cella[p])
+                temp.append(g4prb[p])
+                temp.append(g4rrc[p])
+                corAcc.append(temp)
+                temp=[]
+                
+    myFile = open('/home/pun-node/Desktop/4gCorporate_Account.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/4gCorporate_Account*.csv"), "/home/pun-node/Desktop/4gCorporate_Account.xlsx")
+    
+if typedef==2 and tech=='LTE' and entrymode==1:
+    
+    corAcc=[];tp=0;tpay=0;ca=0;prbv=0;rrcv=0;z=0
+    
+    with open('/home/pun-node/Desktop/4gCorporate_Account.csv') as corData:  
+        rcrreader = csv.reader(corData)
+        for row in rcrreader:
+            corAcc.append(row)
+            
+    
+   
+    s=0
+    for x in corAcc:
+        s=s+1
+    print s
+    for x in corAcc[0]:
+        if x=='Throughput':
+            break
+        tp=tp+1
+    print tp
+    
+    corAcc[1].insert(tp,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    for x in g4cellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and g4thput[z]!='':
+                    corAcc[y].insert(tp,float(g4thput[z]))
+        z=z+1
+        
+    
+    
+
+#-----------------------------------------------------total payload---------------------------------------------------#
+    corAcc[0].insert(tp+1,'')
+    for x in corAcc[0]:
+        if x=='Total Payload':
+            break
+        tpay=tpay+1
+    corAcc[1].insert(tpay,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+ 
+    for x in g4cellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and g4payload[z]!='':
+                    corAcc[y].insert(tpay,float(g4payload[z]))
+        z=z+1
+    
+
+#--------------------------------------------------Cell availability--------------------------------------------------------#
+    
+    corAcc[0].insert(tpay+1,'')
+    for x in corAcc[0]:
+        if x=='Cell Availability':
+            break
+        ca=ca+1
+        
+    corAcc[1].insert(ca,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+    for x in g4cellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and g4cella[z]!='':
+                    corAcc[y].insert(ca,float(g4cella[z]))
+        z=z+1
+    
+
+#----------------------------------------------------PRB----------------------------------------------------------#
+    corAcc[0].insert(ca+1,'')
+    for x in corAcc[0]:
+        if x=='PRB':
+            break
+        prbv=prbv+1
+        
+    corAcc[1].insert(prbv,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+
+    for x in g4cellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and g4prb[z]!='':
+                    corAcc[y].insert(prbv,float(g4prb[z]))
+        z=z+1
+    
+    
+
+#----------------------------------------------------RRC----------------------------------------------------------#
+    corAcc[0].insert(prbv+1,'')
+    for x in corAcc[0]:
+        if x=='RRC':
+            break
+        rrcv=rrcv+1
+    
+    corAcc[1].insert(rrcv,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+ 
+    for x in g4cellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and g4rrc[z]!='':
+                    corAcc[y].insert(rrcv,float(g4rrc[z]))
+        z=z+1
+    
+#--------------------------------------------------------------------------------------------------------------------#     
+
+                
+    myFile = open('/home/pun-node/Desktop/4gCorporate_Account.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/4gCorporate_Account*.csv"), "/home/pun-node/Desktop/4gCorporate_Accountold.xlsx")
+    
+#---------------------------------------------------------------------------------------------------------------
+if tech=='LTE' and typedef==1 and entrymode==2:
+    
+    z=0;s=0; corAcc=[];rcr=[];g2master=[]
+    
+            
+    for x in range(0,17):
+        temp.append('')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('Cell ID')
+    temp.append('Site ID')
+    temp.append('Site on TDD/FDD')
+    temp.append('Cell Name')
+    temp.append('Site Name')
+    temp.append('Town Name')
+    temp.append('RF Zone')
+    temp.append('Corporate Account Name')
+    temp.append('RF SPOC')
+    temp.append('Remark')
+    temp.append('Issue')
+    temp.append('Cell Availability')
+    temp.append('Total Payload')
+    temp.append('PRB')
+    temp.append('RRC')
+    temp.append('ERAB')
+    temp.append('Throughput')
+    corAcc.append(temp)
+    temp=[]
+    
+    
+    mydate = datetime.date(2018,entrym, entryd)
+    wk= mydate.strftime("%W")
+    dowk=mydate.strftime("%w")
+    
+    corAcc[0][11]=('Week ' + str(wk) + ' Average')
+    
+    z=2
+    temp=[]
+    for y,x in enumerate(g4masterdata):
+        for a,b in enumerate(g4cellname):
+                if b!='LNCEL name' and b!='': 
+                    if g4masterdata[y][3]==b and dowk!=6 and dowk!=0:
+                        temp.append(g4masterdata[y][2])
+                        temp.append(g4masterdata[y][1])
+                        temp.append(g4tdfd[a])
+                        temp.append(b)
+                        temp.append(g4site[a])
+                        temp.append(g4masterdata[y][8])
+                        temp.append(g4masterdata[y][9])
+                        temp.append(g4masterdata[y][5])
+                        temp.append(g4masterdata[y][10])
+                        temp.append('')
+                        temp.append('')
+                        temp.append(g4cella[a])
+                        temp.append(g4payload[a])
+                        temp.append(g4prb[a])
+                        temp.append(g4rrc[a])
+                        temp.append(g4rab[a])
+                        temp.append(g4thput[a])
+                        corAcc.append(temp)
+                        temp=[]
+                
+    
+                    
+    myFile = open('/home/pun-node/Desktop/4g_week_average.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/4g_week_average*.csv"), "/home/pun-node/Desktop/4g_week_average.xlsx")
+    
+
+
+if tech=='LTE' and typedef==2 and entrymode==2:
+    
+    z=0;s=0; corAcc=[]
+    rcr=[];
+    
+            
+    corAcc=[];z=0
+    with open('/home/pun-node/Desktop/4g_week_average.csv') as corData:  
+        rcrreader = csv.reader(corData)
+        for row in rcrreader:
+            corAcc.append(row)
+            
+    mydate = datetime.date(2018,entrym, entryd)
+    wk= (mydate.strftime("%W"))
+    dowk=int(mydate.strftime("%w"))
+    checkwk=('Week ' + str(wk) + ' Average')
+    
+    n=0
+    for x in corAcc[0]:
+        if checkwk in x:
+            n=1
+            break
+            
+    if dowk!=1 and n==1:
+        m=0
+        for x in corAcc[0]:
+            if checkwk in x:
+                break
+            m=m+1
+    
+        s=0
+        for x in corAcc:
+            s=s+1
+        z=2
+        temp=[]
+        for y,x in enumerate(corAcc):
+            for a,b in enumerate(g4cellname):
+                if b!='LNCEL name' and b!='':
+                    if corAcc[y][3]==b and dowk!=6 and dowk!=0:
+                        if corAcc[y][m]!='' and g4cella[a]!='':
+                            corAcc[y][m]=(((float(corAcc[y][m]))*(float(dowk-1)))+float(g4cella[a]))/dowk
+                        if g4payload[a]!=''  and corAcc[y][m+1]!='':
+                            corAcc[y][m+1]= (((float(corAcc[y][m+1]))*(float(dowk-1)))+float(g4payload[a]))/dowk
+                        if corAcc[y][m+2]!='' and g4prb[a]!='':    
+                            corAcc[y][m+2]= (((float(corAcc[y][m+2]))*(float(dowk-1)))+float(g4prb[a]))/dowk
+                        if g4rrc[a]!='' and corAcc[y][m+3]!='':
+                            corAcc[y][m+3]= (((float(corAcc[y][m+3]))*(float(dowk-1)))+float(g4rrc[a]))/dowk
+                        if g4rab[a]!='' and corAcc[y][m+4]!='':
+                            corAcc[y][m+4]= (((float(corAcc[y][m+4]))*(dowk-1)+float(g4rab[a])))/dowk
+                        if g4thput[a]!=''  and corAcc[y][m+5]!='':
+                            corAcc[y][m+5]= (((float(corAcc[y][m+5]))*(float(dowk-1)))+float(g4thput[a]))/dowk
+            z=z+1
+        
+        
+        myFile = open('/home/pun-node/Desktop/4g_week_average.csv', 'w')
+        with myFile:
+            writer = csv.writer(myFile)
+            writer.writerows(corAcc)
+    
+        merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/4g_week_average*.csv"), "/home/pun-node/Desktop/4g_week_average.xlsx")
+
+    if dowk==1 or n==0 :
+        s=0
+        for x in corAcc:
+            s=s+1
+        for x in range(1,7):
+            corAcc[0].insert(11,'')
+        for y,x in enumerate(corAcc):
+            for a,b in enumerate(g4cellname):
+                if b!='LNCEL name' and b!='':
+                    if corAcc[y][3]==b and dowk!=6 and dowk!=0: 
+                        if g4thput[a]!='':
+                            corAcc[y].insert(11,float(g4thput[a]))
+                        if g4rab[a]!='':
+                            corAcc[y].insert(11,float(g4rab[a]))
+                        if g4rrc[a]!='':
+                            corAcc[y].insert(11,float(g4rrc[a]))
+                        if g4prb[a]!='':
+                            corAcc[y].insert(11,float(g4prb[a]))
+                        if g4payload[a]!='':
+                            corAcc[y].insert(11,float(g4payload[a]))
+                        if g4cella[a]!='':
+                            corAcc[y].insert(11,float(g4cella[a]))
+        corAcc[1].insert(11,'Throughput')
+        corAcc[1].insert(11,'ERAB')
+        corAcc[1].insert(11,'RRC')
+        corAcc[1].insert(11,'PRB')
+        corAcc[1].insert(11,'Payload')
+        corAcc[1].insert(11,'Cell Availability')
+        
+        corAcc[0][11]=('Week ' + str(wk) + ' Average')
+                                             
+        myFile = open('/home/pun-node/Desktop/4g_week_average.csv', 'w')
+        with myFile:
+            writer = csv.writer(myFile)
+            writer.writerows(corAcc)
+    
+        merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/4g_week_average*.csv"), "/home/pun-node/Desktop/4g_week_average.xlsx")
+        
+if typedef==1 and tech=='VoLTE' and entrymode==1:
+    corAcc=[];temp=[]
+    
+    for x in range(0,17):
+        temp.append('')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('Cell ID')
+    temp.append('Site ID')
+    temp.append('Site on TDD/FDD')
+    temp.append('Cell Name')
+    temp.append('Site Name')
+    temp.append('Town Name')
+    temp.append('RF Zone')
+    temp.append('Corporate Account Name')
+    temp.append('RF SPOC')
+    temp.append('Remark')
+    temp.append('Issue')
+    corAcc.append(temp)
+    temp=[]
+    
+    corAcc[0][11]='ReRAB Success'
+    corAcc[0][12]='SRVCC Success'
+    corAcc[0][13]='VoLTE Drop'
+    corAcc[0][14]='Packet Loss (DL)'
+    corAcc[0][15]='Packet Loss (UL)'
+    
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+    corAcc[1].append(str(entryd)+'-'+str(entrym)+'-'+'2018')
+                
+    for y,x in enumerate(g4masterdata):
+        for p,q in enumerate(gvcellname):
+            if g4masterdata[y][3]==q:
+                temp.append(g4masterdata[y][2])
+                temp.append(g4masterdata[y][1])
+                for a,b in enumerate(g4cellname):
+                    if b==q:
+                        temp.append(g4tdfd[p])
+                temp.append(q)
+                temp.append(gvsite[p])
+                temp.append(g4masterdata[y][8])
+                temp.append(g4masterdata[y][9])
+                temp.append(g4masterdata[y][5])
+                temp.append(g4masterdata[y][10])
+                temp.append('')
+                temp.append('')
+                temp.append(gverab[p])
+                temp.append(gvsrvcc[p])
+                if gvdrop[p]!='' and gvcalls[p]!='' and gvcalls[p]!='0':
+                    temp.append(float(gvdrop[p])/float(gvcalls[p]))
+                temp.append(gvlossdl[p])
+                temp.append(gvlossul[p])
+                corAcc.append(temp)
+                temp=[]
+                
+    myFile = open('/home/pun-node/Desktop/VoLTECorporate_Account.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/VoLTECorporate_Account*.csv"), "/home/pun-node/Desktop/VoLTECorporate_Account.xlsx")
+    
+    
+if typedef==2 and tech=='VoLTE' and entrymode==1:
+    
+    corAcc=[];rerab=0;srvcc=0;vd=0;pldl=0;plul=0;z=0
+    
+    with open('/home/pun-node/Desktop/VoLTECorporate_Account.csv') as corData:  
+        rcrreader = csv.reader(corData)
+        for row in rcrreader:
+            corAcc.append(row)
+            
+    
+   
+    s=0
+    for x in corAcc:
+        s=s+1
+    print s
+    for x in corAcc[0]:
+        if x=='ReRAB Success':
+            break
+        rerab=rerab+1
+    
+    corAcc[1].insert(rerab,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    for x in gvcellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and gverab[z]!='':
+                    corAcc[y].insert(rerab,float(gverab[z]))
+        z=z+1
+        
+    
+    
+
+#-----------------------------------------------------SRVCC SUCCESS---------------------------------------------------#
+    corAcc[0].insert(rerab+1,'')
+    for x in corAcc[0]:
+        if x=='SRVCC Success':
+            break
+        srvcc=srvcc+1
+    corAcc[1].insert(srvcc,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+ 
+    for x in gvcellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and gvsrvcc[z]!='':
+                    corAcc[y].insert(srvcc,float(gvsrvcc[z]))
+        z=z+1
+    
+
+#--------------------------------------------------volte drop--------------------------------------------------------#
+    
+    corAcc[0].insert(srvcc+1,'')
+    for x in corAcc[0]:
+        if x=='VoLTE Drop':
+            break
+        vd=vd+1
+        
+    corAcc[1].insert(vd,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+    for x in gvcellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and gvdrop[p]!='' and gvcalls[p]!='' and gvcalls[p]!='0':
+                    corAcc[y].insert(vd,(float(gvdrop[p])/float(gvcalls[p])))
+                if (corAcc[y][3]==x and gvdrop[p]=='') or (gvcalls[p]!='' and corAcc[y][3]==x):
+                    corAcc[y].insert(vd,'')
+        z=z+1
+    
+
+#--------------------------------------------------packet loss downlink--------------------------------------------------#
+    corAcc[0].insert(vd+1,'')
+    for x in corAcc[0]:
+        if x=='Packet Loss (DL)':
+            break
+        pldl=pldl+1
+        
+    corAcc[1].insert(pldl,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+
+    for x in gvcellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and gvlossdl[z]!='':
+                    corAcc[y].insert(pldl,float(gvlossdl[z]))
+        z=z+1
+    
+    
+
+#----------------------------------------------------packet loss ul----------------------------------------------------------#
+    corAcc[0].insert(pldl+1,'')
+    for x in corAcc[0]:
+        if x=='Packet Loss (UL)':
+            break
+        plul=plul+1
+    
+    corAcc[1].insert(plul,(str(entryd)+'-'+str(entrym)+'-'+'2018'))
+    
+    z=0
+
+ 
+    for x in gvcellname:
+        for y in range(2,s):
+            if x!='LNCEL name' and x!='':
+                if corAcc[y][3]==x and gvlossul[z]!='':
+                    corAcc[y].insert(plul,float(gvlossul[z]))
+        z=z+1
+    
+#--------------------------------------------------------------------------------------------------------------------#     
+
+                
+    myFile = open('/home/pun-node/Desktop/VoLTECorporate_Account.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
+    merge_all_to_a_book(glob.glob("/home/pun-node/Desktop/VoLTECorporate_Account*.csv"), "/home/pun-node/Desktop/VoLTECorporate_Accountold.xlsx")    
+    
+if tech =='2G' and entrymode==3 and typedef==1:
+    
+       
+    wkdata=[]
+    with open('/home/pun-node/Desktop/2g_week_average.csv') as rawData:
+        csvReader = csv.reader(rawData)
+        for row in csvReader:
+            wkdata.append(row)
+    
+    corAcc=[];temp=[];g2master=[]
+    with open('/home/pun-node/Desktop/2gmasterdata.csv') as masterData:  
+        rcrreader = csv.reader(masterData)
+        for row in rcrreader:
+            g2master.append(row)
+            
+    for x in range(0,17):
+        temp.append('')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('Technology')
+    temp.append('KPI')
+    temp.append('Duration')
+    temp.append('Total Sites/Cells')
+    temp.append('Carry')
+    temp.append('Resolved')
+    temp.append('New')
+    temp.append('% Of Sites/Cells Meeting Criteria')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('2G')
+    temp.append('No. Of Sites With <99% Availability')
+    temp.append('24 Hours')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('2G')
+    temp.append('No. Of Cells With TCH Drop>2% ')
+    temp.append('BBH')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('2G')
+    temp.append('No. Of Cells With TCH Blocking>0.5%')
+    temp.append('BBH')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('2G')
+    temp.append('No. Of Cells With TCH Drop>2% & >200 Calls')
+    temp.append('BBH')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('2G')
+    temp.append('No. Of Cells With HOSR<93%')
+    temp.append('BBH')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('2G')
+    temp.append('No. Of Cells With MMR Quality<90%')
+    temp.append('BBH')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('2G')
+    temp.append('No. Of Cells With RCR>2%')
+    temp.append('24 Hours')
+    corAcc.append(temp)
+    temp=[]
+    temp.append('2G')
+    temp.append('No. Of Cells With FI>4.5')
+    temp.append('24 Hours')
+    corAcc.append(temp)
+    temp=[]
+    
+    
+    mydate = datetime.date(2018,entrym, entryd)
+    wk= (mydate.strftime("%W"))
+    dowk=int(mydate.strftime("%w"))
+    
+    corAcc[0][3]=('Week '+str(wk)+' Average')
+    checkwk=('Week '+str(wk)+' Average')
+    
+    h=0;l=0
+    for x in wkdata[0]:
+        if checkwk in x:
+            h=1
+            break
+        l=l+1
+    print l       
+    q=0
+    for x,y in enumerate(cellid):
+        for a,b in enumerate(g2master):
+            if segname[x]==g2master[a][3]:
+                q=q+1
+        
+    temp2=[];temp=[];temp3=[]
+    k1=0;k2=0;k3=0;k4=0;k5=0;k6=0;k7=0;k8=0
+    
+    for x in range(0,1500):
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp.append(temp3)
+        temp3=[]
+        
+        
+    
+    
+    for y,x in enumerate(wkdata):
+        if wkdata[y][0]!='' and wkdata[y][0]!='Cell ID': 
+            if (float(wkdata[y][l+4]))<99:
+                temp[y][0]=wkdata[y][0]
+                k1=k1+1
+
+                    
+            if wkdata[y][l+6]!='' and (float(wkdata[y][l+6]))>2:
+                temp[y][1]=wkdata[y][0]
+                k2=k2+1
+
+                    
+            if wkdata[y][l+7]!='' and float(wkdata[y][l+7])>0.5:
+                temp[y][2]=wkdata[y][0]
+                k3=k3+1
+
+                    
+            if wkdata[y][l+6]!='' and wkdata[y][l+3]!='' and float(wkdata[y][l+6])>2 and float(wkdata[y][l+3])>200:
+                temp[y][3]=wkdata[y][0]
+                k4=k4+1
+
+                    
+            if wkdata[y][l+9]!='' and float(wkdata[y][l+9])<93:
+                temp[y][4]=wkdata[y][0]
+                k5=k5+1
+
+                    
+            if wkdata[y][l+8]!='' and float (wkdata[y][l+8])<90:
+                    
+                temp[y][5]=wkdata[y][0]
+                k6=k6+1
+                    
+
+            if wkdata[y][l+2]!='' and float(wkdata[y][l+2])>2:
+                print y
+                temp[y][6]=wkdata[y][0]
+                k7=k7+1
+
+                            
+            if wkdata[y][l+1]!='' and float(wkdata[y][l+1])>4.5:
+                temp[y][7]=wkdata[y][0]
+                k8=k8+1
+
+    
+                                                   
+
+    k=0                
+    for x in master:
+        k=k+1
+    q=float(q)/float(k)
+    k1=int(k1/q)
+
+    q=0
+    for x,y in enumerate(cellid):
+        for a,b in enumerate(g2master):
+            if segname[x]==g2master[a][3]:
+                q=q+1
+                
+    corAcc[2].append(k)
+    corAcc[2].append(0)
+    corAcc[2].append(0)
+    corAcc[2].append(k1)
+    corAcc[2].append(100-((float(k1)/float(k))*100))
+    
+    corAcc[3].append(q)
+    corAcc[3].append(0)
+    corAcc[3].append(0)
+    corAcc[3].append(k2)
+    corAcc[3].append(100-((float(k2)/float(q))*100))
+    
+    corAcc[4].append(q)
+    corAcc[4].append(0)
+    corAcc[4].append(0)
+    corAcc[4].append(k3)
+    corAcc[4].append(100-((float(k3)/float(q))*100))
+    
+    corAcc[5].append(q)
+    corAcc[5].append(0)
+    corAcc[5].append(0)
+    corAcc[5].append(k4)
+    corAcc[5].append(100-((float(k4)/float(q))*100))
+    
+    corAcc[6].append(q)
+    corAcc[6].append(0)
+    corAcc[6].append(0)
+    corAcc[6].append(k5)
+    corAcc[6].append(100-((float(k5)/float(q))*100))
+    
+    corAcc[7].append(q)
+    corAcc[7].append(0)
+    corAcc[7].append(0)
+    corAcc[7].append(k6)
+    corAcc[7].append(100-((float(k6)/float(q))*100))
+    
+    corAcc[8].append(q)
+    corAcc[8].append(0)
+    corAcc[8].append(0)
+    corAcc[8].append(k7)
+    corAcc[8].append(100-((float(k7)/float(q))*100))
+    
+    corAcc[9].append(q)
+    corAcc[9].append(0)
+    corAcc[9].append(0)
+    corAcc[9].append(k8)
+    corAcc[9].append(100-((float(k8)/float(q))*100))
+    
+    newid=(str(wk)+'new_cell.csv')
+    allid=(str(wk)+'all_cell.csv')
+    
+    
+    
+    myFile = open(('/home/pun-node/Desktop/'+newid), 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(temp)
+        
+    myFile = open(('/home/pun-node/Desktop/'+allid), 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(temp)
+        
+    temp=[]
+    for x in range(0,1500):
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp.append(temp3)
+        temp3=[]
+        
+    carryid=(str(wk)+'carry_cell.csv')
+    rsid=(str(wk)+'resolve_cell.csv')
+    
+    myFile = open(('/home/pun-node/Desktop/'+carryid), 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(temp)
+        
+    myFile = open(('/home/pun-node/Desktop/'+rsid), 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(temp)
+        
+    myFile = open('/home/pun-node/Desktop/2gsummary.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+        
+        
+        
+if tech=='2G' and typedef==2 and entrymode==3:
+    
+    wkdata=[];corAcc=[];temp=[];alldata=[];newdata1=[];carrydata1=[];rsdata1=[]
+        
+    mydate = datetime.date(2018,entrym, entryd)
+    wk= (mydate.strftime("%W"))
+    dowk=int(mydate.strftime("%w"))
+    
+    checkwk=('Week '+str(wk)+' Average')
+    
+    with open('/home/pun-node/Desktop/2g_week_average.csv') as rawData:
+        csvReader = csv.reader(rawData)
+        for row in csvReader:
+            wkdata.append(row)
+            
+    with open('/home/pun-node/Desktop/2gsummary.csv') as rawData:
+        csvReader = csv.reader(rawData)
+        for row in csvReader:
+            corAcc.append(row)
+
+    with open(('/home/pun-node/Desktop/'+'0'+str(int(wk)-1)+'all_cell.csv')) as masterData:  
+        rcrreader = csv.reader(masterData)
+        for row in rcrreader:
+            alldata.append(row)
+            
+            
+    h=0;l=0
+    for x in wkdata[0]:
+        if checkwk in x:
+            h=1
+            break
+        l=l+1
+        
+    q=0
+    for x,y in enumerate(cellid):
+        for a,b in enumerate(g2master):
+            if segname[x]==g2master[a][3]:
+                q=q+1
+        
+    temp2=[];temp=[];temp3=[]
+    k1=0;k2=0;k3=0;k4=0;k5=0;k6=0;k7=0;k8=0
+    
+    for x in range(0,1500):
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp.append(temp3)
+        temp3=[]
+    temp3=[]
+    for x in range(0,1500):
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        newdata1.append(temp3)
+        temp3=[]
+        
+    temp3=[]
+    for x in range(0,1500):
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        carrydata1.append(temp3)
+        temp3=[]
+        
+    temp3=[]
+    for x in range(0,1500):
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        temp3.append('')
+        rsdata1.append(temp3)
+        temp3=[]
+        
+    
+    
+    for y,x in enumerate(wkdata):
+        if wkdata[y][0]!='' and wkdata[y][0]!='Cell ID': 
+            if (wkdata[y][l+1])<99:
+                temp[y][0]=wkdata[y][0]
+                k1=k1+1
+
+                    
+            if wkdata[y][l+6]!='' and (float(wkdata[y][l+6]))>2:
+                temp[y][1]=wkdata[y][0]
+                k2=k2+1
+
+                    
+            if wkdata[y][l+7]!='' and float(wkdata[y][l+7])>0.5:
+                temp[y][2]=wkdata[y][0]
+                k3=k3+1
+
+                    
+            if wkdata[y][l+6]!='' and wkdata[y][l+3]!='' and float(wkdata[y][l+6])>2 and float(wkdata[y][l+3])>200:
+                temp[y][3]=wkdata[y][0]
+                k4=k4+1
+
+                    
+            if wkdata[y][l+9]!='' and float(wkdata[y][l+9])<93:
+                temp[y][4]=wkdata[y][0]
+                k5=k5+1
+
+                    
+            if wkdata[y][l+8]!='' and float (wkdata[y][l+8])<90:
+                temp[y][5]=wkdata[y][0]
+                k6=k6+1
+                    
+
+            if wkdata[y][l+2]!='' and float(wkdata[y][l+2])>2:
+                temp[y][6]=wkdata[y][0]
+                k7=k7+1
+
+                            
+            if wkdata[y][l+1]!='' and float(wkdata[y][l+1])>4.5:
+                temp[y][7]=wkdata[y][0]
+                k8=k8+1
+                
+    
+    allid=(str(wk)+'all_cell.csv')           
+    myFile = open(('/home/pun-node/Desktop/'+allid), 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(temp)
+                    
+    for y,x in enumerate(temp):
+        for a,b in enumerate(alldata):
+            if temp[y][0]!='' and alldata[a][0]!='':
+                if temp[y][0]==alldata[a][0]:
+                    carrydata1[y][0]==temp[y][0]
+            if temp[y][1]!='' and alldata[a][1]!='':
+                if temp[y][1]==alldata[a][1]:
+                    carrydata1[y][1]==temp[y][1]
+            if temp[y][2]!='' and alldata[a][2]!='':
+                if temp[y][2]==alldata[a][2]:
+                    carrydata1[y][2]==temp[y][2]
+            if temp[y][3]!='' and alldata[a][3]!='':
+                if temp[y][3]==alldata[a][3]:
+                    carrydata1[y][3]==temp[y][3]
+            if temp[y][4]!='' and alldata[a][4]!='':
+                if temp[y][4]==alldata[a][4]:
+                    carrydata1[y][4]==temp[y][4]
+            if temp[y][5]!='' and alldata[a][5]!='':
+                if temp[y][5]==alldata[a][5]:
+                    carrydata1[y][5]==temp[y][5]
+            if temp[y][6]!='' and alldata[a][6]!='':
+                if temp[y][6]==alldata[a][6]:
+                    carrydata1[y][6]==temp[y][6]
+            if temp[y][7]!='' and alldata[a][7]!='':
+                if temp[y][7]==alldata[a][7]:
+                    carrydata1[y][7]==temp[y][7]
+                    
+                    
+    for y,x in enumerate(temp):
+        for a, b in enumerate(alldata):
+            if temp[y][0]!='' and alldata[a][0]!='':
+                if temp[y][0]!=alldata[a][0]:
+                    rsdata1[y][0]==temp[y][0]
+                    temp[y][0]=''
+            if temp[y][1]!='' and alldata[a][1]!='':
+                if temp[y][1]!=alldata[a][1]:
+                    rsdata1[y][1]==temp[y][1]
+                    temp[y][1]=''
+            if temp[y][2]!='' and alldata[a][2]!='':
+                if temp[y][2]!=alldata[a][2]:
+                    rsdata1[y][2]==temp[y][2]
+                    temp[y][2]=''
+            if temp[y][3]!='' and alldata[a][3]!='':
+                if temp[y][3]!=alldata[a][3]:
+                    rsdata1[y][3]==temp[y][3]
+                    temp[y][3]=''
+            if temp[y][4]!='' and alldata[a][4]!='':
+                if temp[y][4]!=alldata[a][4]:
+                    rsdata1[y][4]==temp[y][4]
+                    temp[y][4]=''
+            if temp[y][5]!='' and alldata[a][5]!='':
+                if temp[y][5]!=alldata[a][5]:
+                    rsdata1[y][5]==temp[y][5]
+                    temp[y][5]=''
+            if temp[y][6]!='' and alldata[a][6]!='':
+                if temp[y][6]!=alldata[a][6]:
+                    rsdata1[y][6]==temp[y][6]
+                    temp[y][6]=''
+            if temp[y][7]!='' and alldata[a][7]!='':
+                if temp[y][7]!=alldata[a][7]:
+                    rsdata1[y][7]==temp[y][7]
+                    temp[y][7]=''
+                    
+    
+    corAcc[1].insert(4,'% Of Sites/Cells Meeting Criteria')
+    corAcc[1].insert(4,'New')
+    corAcc[1].insert(4,'Resolved')
+    corAcc[1].insert(4,'Carry')
+    for x in range(1,4):
+        corAcc[0].insert(3,'')
+    corAcc[0].insert(3,('Week '+str(wk)+' Average'))
+    
+    z1=0;z2=0;z3=0
+    for y,x in enumerate(carrydata1):
+        if carrydata1[y][0]!='':
+            z1=z1+1
+    for y,x in enumerate(rsdata1):
+        if rsdata1[y][0]!='':
+            z2=z2+1
+            
+    for y,x in enumerate(temp):
+        if temp[y][0]!='':
+            z3=z3+1
+    
+    corAcc[2].insert(4,(100-((float(k8)/float(q))*100)))
+    corAcc[2].insert(4,z3)
+    corAcc[2].insert(4,z2)
+    corAcc[2].insert(4,z1)
+    
+    #---------------------------------------------------------------
+    
+    z1=0;z2=0;z3=0
+    for y,x in enumerate(carrydata1):
+        if carrydata1[y][1]!='':
+            z1=z1+1
+    for y,x in enumerate(rsdata1):
+        if rsdata1[y][1]!='':
+            z2=z2+1
+            
+    for y,x in enumerate(temp):
+        if temp[y][1]!='':
+            z3=z3+1
+    
+    corAcc[3].insert(4,(100-((float(k7)/float(q))*100)))
+    corAcc[3].insert(4,z3)
+    corAcc[3].insert(4,z2)
+    corAcc[3].insert(4,z1)
+    
+     #---------------------------------------------------------------
+    
+    z1=0;z2=0;z3=0
+    for y,x in enumerate(carrydata1):
+        if carrydata1[y][2]!='':
+            z1=z1+1
+    for y,x in enumerate(rsdata1):
+        if rsdata1[y][2]!='':
+            z2=z2+1
+            
+    for y,x in enumerate(temp):
+        if temp[y][2]!='':
+            z3=z3+1
+    
+    corAcc[4].insert(4,(100-((float(k6)/float(q))*100)))
+    corAcc[4].insert(4,z3)
+    corAcc[4].insert(4,z2)
+    corAcc[4].insert(4,z1)
+    
+     #---------------------------------------------------------------
+    
+    z1=0;z2=0;z3=0
+    for y,x in enumerate(carrydata1):
+        if carrydata1[y][3]!='':
+            z1=z1+1
+    for y,x in enumerate(rsdata1):
+        if rsdata1[y][3]!='':
+            z2=z2+1
+            
+    for y,x in enumerate(temp):
+        if temp[y][3]!='':
+            z3=z3+1
+    
+    corAcc[5].insert(4,(100-((float(k5)/float(q))*100)))
+    corAcc[5].insert(4,z3)
+    corAcc[5].insert(4,z2)
+    corAcc[5].insert(4,z1)
+    
+     #---------------------------------------------------------------
+    
+    z1=0;z2=0;z3=0
+    for y,x in enumerate(carrydata1):
+        if carrydata1[y][4]!='':
+            z1=z1+1
+    for y,x in enumerate(rsdata1):
+        if rsdata1[y][4]!='':
+            z2=z2+1
+            
+    for y,x in enumerate(temp):
+        if temp[y][4]!='':
+            z3=z3+1
+    
+    corAcc[6].insert(4,(100-((float(k4)/float(q))*100)))
+    corAcc[6].insert(4,z3)
+    corAcc[6].insert(4,z2)
+    corAcc[6].insert(4,z1)
+    
+     #---------------------------------------------------------------
+    
+    z1=0;z2=0;z3=0
+    for y,x in enumerate(carrydata1):
+        if carrydata1[y][5]!='':
+            z1=z1+1
+    for y,x in enumerate(rsdata1):
+        if rsdata1[y][5]!='':
+            z2=z2+1
+            
+    for y,x in enumerate(temp):
+        if temp[y][5]!='':
+            z3=z3+1
+    
+    corAcc[7].insert(4,(100-((float(k3)/float(q))*100)))
+    corAcc[7].insert(4,z3)
+    corAcc[7].insert(4,z2)
+    corAcc[7].insert(4,z1)
+    
+     #---------------------------------------------------------------
+    
+    z1=0;z2=0;z3=0
+    for y,x in enumerate(carrydata1):
+        if carrydata1[y][6]!='':
+            z1=z1+1
+    for y,x in enumerate(rsdata1):
+        if rsdata1[y][6]!='':
+            z2=z2+1
+            
+    for y,x in enumerate(temp):
+        if temp[y][6]!='':
+            z3=z3+1
+    
+    corAcc[8].insert(4,(100-((float(k2)/float(q))*100)))
+    corAcc[8].insert(4,z3)
+    corAcc[8].insert(4,z2)
+    corAcc[8].insert(4,z1)
+    
+     #---------------------------------------------------------------
+    
+    z1=0;z2=0;z3=0
+    for y,x in enumerate(carrydata1):
+        if carrydata1[y][7]!='':
+            z1=z1+1
+    for y,x in enumerate(rsdata1):
+        if rsdata1[y][7]!='':
+            z2=z2+1
+            
+    for y,x in enumerate(temp):
+        if temp[y][7]!='':
+            z3=z3+1
+    
+    corAcc[9].insert(4,(100-((float(k1)/float(q))*100)))
+    corAcc[9].insert(4,z3)
+    corAcc[9].insert(4,z2)
+    corAcc[9].insert(4,z1)
+    
+     #---------------------------------------------------------------
+        
+        
+    newid=(str(wk)+'new_cell.csv')
+    carryid=(str(wk)+'carry_cell.csv')
+    rsid=(str(wk)+'resolve_cell.csv')
+    
+    
+    
+    myFile = open(('/home/pun-node/Desktop/'+newid), 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(temp)
+        
+    myFile = open(('/home/pun-node/Desktop/'+rsid), 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(rsdata1)
+        
+    myFile = open(('/home/pun-node/Desktop/'+carryid), 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(carrydata1)
+        
+    myFile = open('/home/pun-node/Desktop/2gsummary.csv', 'w')
+    with myFile:
+        writer = csv.writer(myFile)
+        writer.writerows(corAcc)
+    
